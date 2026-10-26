@@ -27,16 +27,6 @@ The Power BI dashboard compares trash haulers and collection routes, identifies 
 - Compare estimated liability under three fine structures
 - Provide route- and ZIP-level geographic analysis
 
-## Dashboard Features
-
-- Complaint, residence, and prior-year summary metrics
-- Contractor, complaint-type, and year filters
-- Monthly and weekday complaint trends
-- Top routes and ZIP codes
-- Interactive fine-policy comparison
-- Incident mapping
-- Route and ZIP drill-through to the Map page
-
 ## Technologies Used
 
 - Microsoft Power BI
