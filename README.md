@@ -2,6 +2,8 @@
 
 [View the interactive Power BI dashboard](https://app.powerbi.com/view?r=eyJrIjoiMTc0Zjk4YzAtYTVkNC00YTc4LWJkODUtNjZlZDM0OWFkYWYyIiwidCI6IjEwMWRhNTg3LTE4NDMtNGY1Mi04YjhhLTE3YjA2OWM2NmQzMyIsImMiOjJ9)
 
+Additional technical details are available in [METHODS.md](METHODS.md).
+
 ## Project Overview
 
 This project analyzes historical hubNashville service requests to evaluate missed trash pickups, recurring service problems, collection performance, and financial liability under different fine policies.
@@ -55,8 +57,6 @@ The Power BI dashboard compares trash haulers and collection routes, identifies 
 - Scenario-based policy analysis
 - Controlled visual interactions and drill-through
 - Policy-output validation
-
-Additional technical details are available in [METHODS.md](METHODS.md).
 
 ## Data Source
 
