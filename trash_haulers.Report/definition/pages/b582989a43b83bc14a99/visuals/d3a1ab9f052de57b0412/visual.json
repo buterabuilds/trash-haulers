@@ -1,0 +1,771 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "d3a1ab9f052de57b0412",
+  "position": {
+    "x": 40.645161290322584,
+    "y": 142.25806451612902,
+    "z": 2000,
+    "height": 891.29032258064512,
+    "width": 1136.6129032258063,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "azureMap",
+    "query": {
+      "queryState": {
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DIM_TrashRoute"
+                    }
+                  },
+                  "Property": "Trash Hauler"
+                }
+              },
+              "queryRef": "DIM_TrashRoute.Trash Hauler",
+              "nativeQueryRef": "Trash Hauler"
+            }
+          ]
+        },
+        "Size": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_MeasureTable"
+                    }
+                  },
+                  "Property": "Total Requests"
+                }
+              },
+              "queryRef": "_MeasureTable.Total Requests",
+              "nativeQueryRef": "Total Requests"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DIM_Location"
+                    }
+                  },
+                  "Property": "Longitude"
+                }
+              },
+              "queryRef": "DIM_Location.Longitude",
+              "nativeQueryRef": "Longitude"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DIM_Location"
+                    }
+                  },
+                  "Property": "Latitude"
+                }
+              },
+              "queryRef": "DIM_Location.Latitude",
+              "nativeQueryRef": "Latitude"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "mapControls": [
+        {
+          "properties": {
+            "zoom": {
+              "expr": {
+                "Literal": {
+                  "Value": "6.95D"
+                }
+              }
+            },
+            "centerLatitude": {
+              "expr": {
+                "Literal": {
+                  "Value": "36.16164750531763D"
+                }
+              }
+            },
+            "centerLongitude": {
+              "expr": {
+                "Literal": {
+                  "Value": "-86.8013980570463D"
+                }
+              }
+            },
+            "pitch": {
+              "expr": {
+                "Literal": {
+                  "Value": "60D"
+                }
+              }
+            },
+            "defaultStyle": {
+              "expr": {
+                "Literal": {
+                  "Value": "'grayscale_light'"
+                }
+              }
+            },
+            "heading": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "barChart": [
+        {
+          "properties": {
+            "showModern": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "minimumHeightPixels": {
+              "expr": {
+                "Literal": {
+                  "Value": "5L"
+                }
+              }
+            },
+            "widthByValue": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "heightUnit": {
+              "expr": {
+                "Literal": {
+                  "Value": "'pixels'"
+                }
+              }
+            },
+            "minZoom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
+                }
+              }
+            },
+            "barShape": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "minDataScalingRange": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "maximumHeightPixels": {
+              "expr": {
+                "Literal": {
+                  "Value": "60L"
+                }
+              }
+            },
+            "widthPixels": {
+              "expr": {
+                "Literal": {
+                  "Value": "3L"
+                }
+              }
+            },
+            "minimumWidthPixels": {
+              "expr": {
+                "Literal": {
+                  "Value": "3D"
+                }
+              }
+            },
+            "maximumWidthPixels": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "bubbleLayer": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "referenceLayer": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "tileLayer": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "position": {
+              "expr": {
+                "Literal": {
+                  "Value": "'BottomRight'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 5,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "DIM_TrashRoute"
+                          }
+                        },
+                        "Property": "Trash Hauler"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'RED RIVER'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 8,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "DIM_TrashRoute"
+                          }
+                        },
+                        "Property": "Trash Hauler"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'METRO'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 9,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "DIM_TrashRoute"
+                          }
+                        },
+                        "Property": "Trash Hauler"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'WASTE IND'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 2,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "DIM_TrashRoute"
+                          }
+                        },
+                        "Property": "Trash Hauler"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'UNKNOWN'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Incident Map'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "2e1d323095f1a75c916b",
+        "type": "Exclude",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "d",
+              "Entity": "DIM_Location",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Not": {
+                  "Expression": {
+                    "In": {
+                      "Expressions": [
+                        {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "d"
+                              }
+                            },
+                            "Property": "Latitude"
+                          }
+                        },
+                        {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "d"
+                              }
+                            },
+                            "Property": "Longitude"
+                          }
+                        },
+                        {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "d"
+                              }
+                            },
+                            "Property": "Latitude"
+                          }
+                        },
+                        {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "d"
+                              }
+                            },
+                            "Property": "Longitude"
+                          }
+                        }
+                      ],
+                      "Values": [
+                        [
+                          {
+                            "Literal": {
+                              "Value": "0.00032310817119708218D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00080005895852272254D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "0.00032310817119708218D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00080005895852272254D"
+                            }
+                          }
+                        ],
+                        [
+                          {
+                            "Literal": {
+                              "Value": "0.00032288274897359633D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00080050802536375278D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "0.00032288274897359633D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00080050802536375278D"
+                            }
+                          }
+                        ],
+                        [
+                          {
+                            "Literal": {
+                              "Value": "0.00032192265653416697D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.000799189720574332D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "0.00032192265653416697D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.000799189720574332D"
+                            }
+                          }
+                        ],
+                        [
+                          {
+                            "Literal": {
+                              "Value": "0.00032197702739095873D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.000799160341129184D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "0.00032197702739095873D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.000799160341129184D"
+                            }
+                          }
+                        ],
+                        [
+                          {
+                            "Literal": {
+                              "Value": "0.00032198346995177527D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00079936730986013738D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "0.00032198346995177527D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00079936730986013738D"
+                            }
+                          }
+                        ],
+                        [
+                          {
+                            "Literal": {
+                              "Value": "0.00032207345893543922D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00079890164557439079D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "0.00032207345893543922D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00079890164557439079D"
+                            }
+                          }
+                        ],
+                        [
+                          {
+                            "Literal": {
+                              "Value": "0.00032211621982149727D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00079838523711625662D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "0.00032211621982149727D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00079838523711625662D"
+                            }
+                          }
+                        ],
+                        [
+                          {
+                            "Literal": {
+                              "Value": "0.00032221571807191881D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00079926787888896344D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "0.00032221571807191881D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00079926787888896344D"
+                            }
+                          }
+                        ],
+                        [
+                          {
+                            "Literal": {
+                              "Value": "0.00032258423259288934D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00080004280635566154D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "0.00032258423259288934D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00080004280635566154D"
+                            }
+                          }
+                        ],
+                        [
+                          {
+                            "Literal": {
+                              "Value": "0.00032276446864701666D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00079975523804352551D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "0.00032276446864701666D"
+                            }
+                          },
+                          {
+                            "Literal": {
+                              "Value": "-0.00079975523804352551D"
+                            }
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "Exclude",
+        "isLockedInViewMode": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+table _MeasureTable
+	lineageTag: 0f678312-4466-44e3-a479-a6ce5b1543a1
+
+	measure 'Total Requests' = CALCULATE(DISTINCTCOUNTNOBLANK(FACT_ServiceRequests[Request Number]))
+		formatString: 0
+		lineageTag: 97b8d053-82a0-4222-bdff-ea56df79cde3
+
+	measure 'Total Addresses' = DISTINCTCOUNTNOBLANK('FACT_ServiceRequests'[AddressKey])
+		formatString: 0
+		lineageTag: 9cbe1be6-47b2-4d60-b097-e4fba44b0319
+
+	measure 'Total Dates' = DISTINCTCOUNT('FACT_ServiceRequests'[Date Opened])
+		formatString: 0
+		lineageTag: 962e0dc1-dbe6-4ebe-a5bc-fa83a49f462f
+
+	measure 'Total Requests (Last Year)' =
+			
+			CALCULATE(
+			    [Total Requests],
+			    SAMEPERIODLASTYEAR('DIM_Date'[Date])
+			)
+		formatString: 0
+		lineageTag: 221c4e96-b557-472f-8564-1f0c7c00e7cc
+
+	measure 'Request Growth' = [Total Requests] - [Total Requests (Last Year)]
+		formatString: 0
+		lineageTag: c30cfd80-64e1-44be-a4a3-032e8701ad01
+
+	measure MissedLabel = "Missed Pickups Only"
+		lineageTag: 9c3a46fd-968c-41bf-9a2e-b16e7bef6e6c
+
+	measure 'Total Fines' =
+			
+			SWITCH(
+			    SELECTEDVALUE(PAR_Policy[PolicyID], 1),
+			    1, SUM(FACT_PenaltyEvents[CurrentPolicy]),
+			    2, SUM(FACT_PenaltyEvents[Alt1Policy]),
+			    3, SUM(FACT_PenaltyEvents[Alt2Policy])
+			)
+		formatString: 0
+		lineageTag: f6275da0-3482-4592-9755-75eccd42d2dc
+
+	measure 'Fines (Metro)' =
+			
+			CALCULATE(
+			    [Total Fines],
+			    KEEPFILTERS('DIM_TrashRoute'[Trash Hauler] = "METRO")
+			)
+		formatString: 0
+		lineageTag: b4302804-7a8b-48da-801e-f72c83a17baf
+
+	measure 'Fines (Red River)' =
+			
+			CALCULATE(
+			    [Total Fines],
+			    KEEPFILTERS('DIM_TrashRoute'[Trash Hauler] = "RED RIVER")
+			)
+		formatString: 0
+		lineageTag: e127a981-755e-42a1-b72e-267f309de971
+
+	measure 'Fines (Waste Ind)' =
+			
+			CALCULATE(
+			    [Total Fines],
+			    KEEPFILTERS('DIM_TrashRoute'[Trash Hauler] = "WASTE IND")
+			)
+		formatString: 0
+		lineageTag: 81a66f6e-61ae-4849-b217-017f5233f969
+
+	column Column
+		formatString: 0
+		lineageTag: ffe6fe2c-1b1c-4d03-a477-03c66bb0a558
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _MeasureTable = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = cafc892594c44861afc723299341c151
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

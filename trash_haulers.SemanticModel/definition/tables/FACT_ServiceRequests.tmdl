@@ -1,0 +1,208 @@
+table FACT_ServiceRequests
+	lineageTag: 2af0e443-fe91-43e5-8e22-c127f439f389
+
+	column 'Request Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: c832d1fa-4550-4efd-9732-0f78450a4cc5
+		summarizeBy: sum
+		sourceColumn: Request Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date Opened'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e12242e8-de59-4100-8c63-dbbfb473034b
+		summarizeBy: none
+		sourceColumn: Date Opened
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Request
+		dataType: string
+		lineageTag: 92cad565-0768-4ca9-a693-58e16e3c12cc
+		summarizeBy: none
+		sourceColumn: Request
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		lineageTag: 70b03f6f-ca3b-4668-956b-963b811b0dfa
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column MissedFlag
+		dataType: string
+		lineageTag: aa77b3f3-f392-4b31-826e-04e191771bae
+		summarizeBy: none
+		sourceColumn: MissedFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	column AddressKey
+		dataType: string
+		lineageTag: 454137a9-696a-4c59-a534-ce47e25258af
+		summarizeBy: none
+		sourceColumn: AddressKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column TrashHaulerKey
+		dataType: string
+		lineageTag: 85c81607-f76c-4a8f-a55f-d0000c7c3cbf
+		summarizeBy: none
+		sourceColumn: TrashHaulerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FACT_ServiceRequests = m
+		mode: import
+		queryGroup: SILVER
+		source = ```
+				let
+				    Source = #"trash_hauler_report (2)",
+				    #"Uppercased Text" = Table.TransformColumns(Source, {{"Incident Address", Text.Upper, type text}}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Uppercased Text",{{"Request ", "Request"}}),
+				    #"Split Column by Delimiter" = Table.SplitColumn(#"Renamed Columns1", "Incident Address", Splitter.SplitTextByEachDelimiter({","}, QuoteStyle.None, false), {"Incident Address.1", "Incident Address.2"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"Incident Address.1", type text}, {"Incident Address.2", type text}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type1",", "," ",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value",","," ",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","TENNESSEE","TN",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Extract City" = Table.TransformColumns(
+				    #"Replaced Value2", 
+				    {
+				        {
+				            "Incident Address.2", 
+				            each if _ <> null and Text.Contains(_, "TN") 
+				                 then Text.BeforeDelimiter(_, "TN") 
+				                 else null, 
+				            type text
+				        }
+				    }
+				),
+				    #"Trimmed Text" = Table.TransformColumns(#"Extract City",{{"Incident Address.2", Text.Trim, type text}}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Trimmed Text","NASHVILLE ","",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Replacing Nulls" = Table.ReplaceValue(
+				        #"Replaced Value3",
+				        null,
+				        each if [Incident Address.2] = null then
+				            if [Zip Code] = 37013 then "ANTIOCH"
+				            else if [Zip Code] = 37027 then "BRENTWOOD"
+				            else if [Zip Code] = 37189 then "WHITES CREEK"
+				            else if [Zip Code] = 37076 then "HERMITAGE"
+				            else if [Zip Code] = 37086 then "LA VERGNE"
+				            else if [Zip Code] = 37115 then "MADISON"
+				            else if List.Contains({
+				                37201, 37203, 37204, 37205, 37206, 37207, 37208, 37209, 37210, 
+				                37211, 37212, 37213, 37214, 37215, 37216, 37217, 37218, 37219, 37220, 37221
+				                }, [Zip Code]) then "NASHVILLE"
+				            else null
+				        else [Incident Address.2],
+				    Replacer.ReplaceValue,
+				    {"Incident Address.2"}
+				    ),
+				    #"Renamed Columns" = Table.RenameColumns(#"Replacing Nulls",{{"Incident Address.2", "City"}}),
+				    #"Split Column by Delimiter1" = Table.SplitColumn(#"Renamed Columns", "Incident Address.1", Splitter.SplitTextByEachDelimiter({" "}, QuoteStyle.None, true), {"Incident Address.1.1", "Incident Address.1.2"}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Split Column by Delimiter1",{{"Incident Address.1.1", type text}, {"Incident Address.1.2", type text}}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Changed Type2","PK","PIKE",Replacer.ReplaceValue,{"Incident Address.1.2"}),
+				    #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5","PKE","PIKE",Replacer.ReplaceValue,{"Incident Address.1.2"}),
+				    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6",".","",Replacer.ReplaceText,{"Incident Address.1.2"}),
+				    #"Replaced Value8" = Table.ReplaceValue(#"Replaced Value7","#","",Replacer.ReplaceText,{"Incident Address.1.2"}),
+				    #"Removing Numeric" = Table.TransformColumns(
+				        #"Replaced Value8",
+				        {
+				            {
+				                "Incident Address.1.2",
+				                each if Text.Length(Text.Select(_, {"0","1","2","3","4","5","6","7","8","9"})) > 0
+				                    then null
+				                    else _,
+				                type text
+				            }
+				        }
+				    ),
+				    #"Replacing Unit/Direction" = Table.TransformColumns(
+				        #"Removing Numeric",
+				        {
+				            {
+				                "Incident Address.1.2",
+				                each if List.Contains({"A","B","C","D","N","S","E","W"}, _)
+				                    then null
+				                    else _,
+				                type text
+				            }
+				        }
+				    ),
+				    #"Replaced Value9" = Table.ReplaceValue(#"Replacing Unit/Direction","RRD","RD",Replacer.ReplaceValue,{"Incident Address.1.2"}),
+				    #"Trimmed Address1" = Table.TransformColumns(#"Replaced Value9",{{"Incident Address.1.1", Text.Trim, type text}}),
+				    #"Trimmed Address2" = Table.TransformColumns(#"Trimmed Address1",{{"Incident Address.1.2", Text.Trim, type text}}),
+				    #"Replaced Value10" = Table.ReplaceValue(#"Trimmed Address2"," NASHVILLE TN","",Replacer.ReplaceText,{"Incident Address.1.1"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value10"," DRIVE"," DR",Replacer.ReplaceText,{"Incident Address.1.1"}),
+				    #"Merged Columns" = Table.CombineColumns(#"Replaced Value4",{"Incident Address.1.1", "Incident Address.1.2"},Combiner.CombineTextByDelimiter(" ", QuoteStyle.None),"Incident Address"),
+				    #"Replaced Value11" = Table.ReplaceValue(#"Merged Columns","Metro","METRO",Replacer.ReplaceText,{"Trash Hauler"}),
+				    #"Changed Type4" = Table.TransformColumnTypes(#"Replaced Value11",{{"Incident Address", type text}}),
+				    #"Replaced Errors" = Table.ReplaceErrorValues(#"Changed Type4", {{"Incident Address", null}}),
+				    #"Replaced Value12" = Table.ReplaceValue(#"Replaced Errors","",null,Replacer.ReplaceValue,{"Trash Route"}),
+				    #"Replaced Value13" = Table.ReplaceValue(#"Replaced Value12",null,"",Replacer.ReplaceValue,{"Trash Hauler"}),
+				    #"Replaced Blanks" = Table.ReplaceValue(
+				        #"Replaced Errors",
+				        "",
+				            each if [Trash Hauler] = "" then
+				                if [Zip Code] <> null then "UNKNOWN"
+				                else null
+				            else [Trash Hauler],
+				        Replacer.ReplaceValue,
+				        {"Trash Hauler"}
+				    ),
+				    #"Replaced Value15" = Table.ReplaceValue(#"Replaced Blanks",null,"UNKNOWN",Replacer.ReplaceValue,{"Trash Hauler"}),
+				    #"Merged Columns1" = Table.CombineColumns(#"Replaced Value15",{"Trash Hauler", "Trash Route"},Combiner.CombineTextByDelimiter(":", QuoteStyle.None),"TrashHaulerKey"),
+				    #"Merged Columns2" = Table.CombineColumns(Table.TransformColumnTypes(#"Merged Columns1", {{"Zip Code", type text}}, "en-US"),{"Incident Address", "City", "Zip Code"},Combiner.CombineTextByDelimiter(",", QuoteStyle.None),"AddressKey"),
+				    #"Removed Columns" = Table.RemoveColumns(#"Merged Columns2",{"Council District", "State Plan X", "State Plan Y"}),
+				    #"Added Custom" = Table.AddColumn(#"Removed Columns", "MissedFlag", each
+				    try
+				        let
+				            request = Text.From([Request] ?? ""),
+				            description = Text.From([Description] ?? ""),
+				            keywords = {
+				                "missed",
+				                "miss",
+				                "skip",
+				                "skipped",
+				                "not picked",
+				                "failed",
+				                "fail",
+				                "forgot",
+				                "never",
+				                "did not"
+				            }
+				        in
+				            if  Text.Contains(
+				                    request,
+				                    "Missed",
+				                    Comparer.OrdinalIgnoreCase
+				                )
+				            or List.AnyTrue(
+				                List.Transform(
+				                    keywords,
+				                    each Text.Contains(
+				                        description,
+				                        _,
+				                        Comparer.OrdinalIgnoreCase
+				                    )
+				                ))
+				            then "Y"
+				            else "N"
+				    otherwise "N")
+				in
+				    #"Added Custom"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

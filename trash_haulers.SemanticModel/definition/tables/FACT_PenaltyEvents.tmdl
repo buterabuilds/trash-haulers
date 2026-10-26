@@ -1,0 +1,311 @@
+table FACT_PenaltyEvents
+	lineageTag: 24a3d851-9cc6-4a75-b902-e51b0a5ab7c4
+
+	column 'Date Opened'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 4624bbe8-8db8-4d80-a055-c52e81e7f555
+		summarizeBy: none
+		sourceColumn: Date Opened
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column AddressKey
+		dataType: string
+		lineageTag: d10b8b1f-8f26-4654-8b8a-697344263ce8
+		summarizeBy: none
+		sourceColumn: AddressKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column TrashHaulerKey
+		dataType: string
+		lineageTag: 374eb717-3ea7-4805-ae3f-be84d669ae82
+		summarizeBy: none
+		sourceColumn: TrashHaulerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CurrentPolicy
+		dataType: int64
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: b80ce77e-48fa-4fe3-917a-0f7040e92470
+		summarizeBy: sum
+		sourceColumn: CurrentPolicy
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Alt1Policy
+		dataType: int64
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 6197e1bb-701c-4959-91bf-17ab2a2ca103
+		summarizeBy: sum
+		sourceColumn: Alt1Policy
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Alt2Policy
+		dataType: int64
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 9f286031-1873-42a7-ae4c-0b82ef38ee48
+		summarizeBy: sum
+		sourceColumn: Alt2Policy
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FACT_PenaltyEvents = m
+		mode: import
+		queryGroup: SILVER
+		source = ```
+				let
+				    Source = #"trash_hauler_report (2)",
+				    #"Uppercased Text" = Table.TransformColumns(Source, {{"Incident Address", Text.Upper, type text}}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Uppercased Text",{{"Request ", "Request"}}),
+				    #"Split Column by Delimiter" = Table.SplitColumn(#"Renamed Columns1", "Incident Address", Splitter.SplitTextByEachDelimiter({","}, QuoteStyle.None, false), {"Incident Address.1", "Incident Address.2"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"Incident Address.1", type text}, {"Incident Address.2", type text}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type1",", "," ",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value",","," ",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","TENNESSEE","TN",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Extract City" = Table.TransformColumns(
+				    #"Replaced Value2", 
+				    {
+				        {
+				            "Incident Address.2", 
+				            each if _ <> null and Text.Contains(_, "TN") 
+				                 then Text.BeforeDelimiter(_, "TN") 
+				                 else null, 
+				            type text
+				        }
+				    }
+				),
+				    #"Trimmed Text" = Table.TransformColumns(#"Extract City",{{"Incident Address.2", Text.Trim, type text}}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Trimmed Text","NASHVILLE ","",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Replacing Nulls" = Table.ReplaceValue(
+				        #"Replaced Value3",
+				        null,
+				        each if [Incident Address.2] = null then
+				            if [Zip Code] = 37013 then "ANTIOCH"
+				            else if [Zip Code] = 37027 then "BRENTWOOD"
+				            else if [Zip Code] = 37189 then "WHITES CREEK"
+				            else if [Zip Code] = 37076 then "HERMITAGE"
+				            else if [Zip Code] = 37086 then "LA VERGNE"
+				            else if [Zip Code] = 37115 then "MADISON"
+				            else if List.Contains({
+				                37201, 37203, 37204, 37205, 37206, 37207, 37208, 37209, 37210, 
+				                37211, 37212, 37213, 37214, 37215, 37216, 37217, 37218, 37219, 37220, 37221
+				                }, [Zip Code]) then "NASHVILLE"
+				            else null
+				        else [Incident Address.2],
+				    Replacer.ReplaceValue,
+				    {"Incident Address.2"}
+				    ),
+				    #"Renamed Columns" = Table.RenameColumns(#"Replacing Nulls",{{"Incident Address.2", "City"}}),
+				    #"Split Column by Delimiter1" = Table.SplitColumn(#"Renamed Columns", "Incident Address.1", Splitter.SplitTextByEachDelimiter({" "}, QuoteStyle.None, true), {"Incident Address.1.1", "Incident Address.1.2"}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Split Column by Delimiter1",{{"Incident Address.1.1", type text}, {"Incident Address.1.2", type text}}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Changed Type2","PK","PIKE",Replacer.ReplaceValue,{"Incident Address.1.2"}),
+				    #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5","PKE","PIKE",Replacer.ReplaceValue,{"Incident Address.1.2"}),
+				    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6",".","",Replacer.ReplaceText,{"Incident Address.1.2"}),
+				    #"Replaced Value8" = Table.ReplaceValue(#"Replaced Value7","#","",Replacer.ReplaceText,{"Incident Address.1.2"}),
+				    #"Removing Numeric" = Table.TransformColumns(
+				        #"Replaced Value8",
+				        {
+				            {
+				                "Incident Address.1.2",
+				                each if Text.Length(Text.Select(_, {"0","1","2","3","4","5","6","7","8","9"})) > 0
+				                    then null
+				                    else _,
+				                type text
+				            }
+				        }
+				    ),
+				    #"Replacing Unit/Direction" = Table.TransformColumns(
+				        #"Removing Numeric",
+				        {
+				            {
+				                "Incident Address.1.2",
+				                each if List.Contains({"A","B","C","D","N","S","E","W"}, _)
+				                    then null
+				                    else _,
+				                type text
+				            }
+				        }
+				    ),
+				    #"Replaced Value9" = Table.ReplaceValue(#"Replacing Unit/Direction","RRD","RD",Replacer.ReplaceValue,{"Incident Address.1.2"}),
+				    #"Trimmed Address1" = Table.TransformColumns(#"Replaced Value9",{{"Incident Address.1.1", Text.Trim, type text}}),
+				    #"Trimmed Address2" = Table.TransformColumns(#"Trimmed Address1",{{"Incident Address.1.2", Text.Trim, type text}}),
+				    #"Replaced Value10" = Table.ReplaceValue(#"Trimmed Address2"," NASHVILLE TN","",Replacer.ReplaceText,{"Incident Address.1.1"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value10"," DRIVE"," DR",Replacer.ReplaceText,{"Incident Address.1.1"}),
+				    #"Merged Columns" = Table.CombineColumns(#"Replaced Value4",{"Incident Address.1.1", "Incident Address.1.2"},Combiner.CombineTextByDelimiter(" ", QuoteStyle.None),"Incident Address"),
+				    #"Replaced Value11" = Table.ReplaceValue(#"Merged Columns","Metro","METRO",Replacer.ReplaceText,{"Trash Hauler"}),
+				    #"Changed Type4" = Table.TransformColumnTypes(#"Replaced Value11",{{"Incident Address", type text}}),
+				    #"Replaced Errors" = Table.ReplaceErrorValues(#"Changed Type4", {{"Incident Address", null}}),
+				    #"Replaced Value12" = Table.ReplaceValue(#"Replaced Errors","",null,Replacer.ReplaceValue,{"Trash Route"}),
+				    #"Replaced Value13" = Table.ReplaceValue(#"Replaced Value12",null,"",Replacer.ReplaceValue,{"Trash Hauler"}),
+				    #"Replaced Blanks" = Table.ReplaceValue(
+				        #"Replaced Errors",
+				        "",
+				            each if [Trash Hauler] = "" then
+				                if [Zip Code] <> null then "UNKNOWN"
+				                else null
+				            else [Trash Hauler],
+				        Replacer.ReplaceValue,
+				        {"Trash Hauler"}
+				    ),
+				    #"Replaced Value15" = Table.ReplaceValue(#"Replaced Blanks",null,"UNKNOWN",Replacer.ReplaceValue,{"Trash Hauler"}),
+				    #"Merged Columns1" = Table.CombineColumns(#"Replaced Value15",{"Trash Hauler", "Trash Route"},Combiner.CombineTextByDelimiter(":", QuoteStyle.None),"TrashHaulerKey"),
+				    #"Merged Columns2" = Table.CombineColumns(Table.TransformColumnTypes(#"Merged Columns1", {{"Zip Code", type text}}, "en-US"),{"Incident Address", "City", "Zip Code"},Combiner.CombineTextByDelimiter(",", QuoteStyle.None),"AddressKey"),
+				    #"Removed Columns" = Table.RemoveColumns(#"Merged Columns2",{"Council District", "State Plan X", "State Plan Y"}),
+				    #"Added Custom" = Table.AddColumn(#"Removed Columns", "MissedFlag", each
+				    try
+				        let
+				            request = Text.From([Request] ?? ""),
+				            description = Text.From([Description] ?? ""),
+				            keywords = {
+				                "missed",
+				                "miss",
+				                "skip",
+				                "skipped",
+				                "not picked",
+				                "failed",
+				                "fail",
+				                "forgot",
+				                "never",
+				                "did not"
+				            }
+				        in
+				            if  Text.Contains(
+				                    request,
+				                    "Missed",
+				                    Comparer.OrdinalIgnoreCase
+				                )
+				            or List.AnyTrue(
+				                List.Transform(
+				                    keywords,
+				                    each Text.Contains(
+				                        description,
+				                        _,
+				                        Comparer.OrdinalIgnoreCase
+				                    )
+				                ))
+				            then "Y"
+				            else "N"
+				    otherwise "N"),
+				    #"Filtered Rows" = Table.SelectRows(#"Added Custom", each ([MissedFlag] = "Y")),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Filtered Rows",{"Request", "Description", "MissedFlag"}),
+				    #"Sorted Rows" = Table.Sort(#"Removed Columns1",{{"AddressKey", Order.Ascending}}),
+				    #"Filtered Rows1" = Table.SelectRows(#"Sorted Rows", each not Text.Contains([TrashHaulerKey], "UNKNOWN")),
+				    #"Filtered Rows2" = Table.SelectRows(#"Filtered Rows1", each not Text.StartsWith([AddressKey], ",")),
+				    #"Removed Duplicates" = Table.Distinct(#"Filtered Rows2", {"Date Opened", "AddressKey"}),
+				    #"Grouped Rows" = Table.Group(#"Removed Duplicates", {"AddressKey"}, {{"AddressGroup", each _, type table [Request Number=nullable number, Date Opened=nullable date, AddressKey=text, TrashHaulerKey=text]}}),
+				    #"Added Custom1" = Table.AddColumn(#"Grouped Rows", "IndexedData", each Table.AddIndexColumn([AddressGroup], "MissedIndex", 1, 1, Int64.Type)),
+				    #"Removed Columns2" = Table.RemoveColumns(#"Added Custom1",{"AddressGroup"}),
+				    #"Expanded IndexedData" = Table.ExpandTableColumn(#"Removed Columns2", "IndexedData", {"Request Number", "Date Opened", "AddressKey", "TrashHaulerKey", "MissedIndex"}, {"Request Number", "Date Opened", "AddressKey.1", "TrashHaulerKey", "MissedIndex"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Expanded IndexedData",{"Request Number", "Date Opened", "AddressKey", "AddressKey.1", "TrashHaulerKey", "MissedIndex"}),
+				    #"Removed Columns3" = Table.RemoveColumns(#"Reordered Columns",{"AddressKey.1"}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Removed Columns3", "CurrentPolicy", each if [MissedIndex] > 1 then 200 else 0),
+				    #"Removed Columns4" = Table.RemoveColumns(#"Added Conditional Column",{"MissedIndex"}),
+				    #"Grouped Rows1" = Table.Group(#"Removed Columns4", {"AddressKey"}, {{"AllData", each _, type table [Request Number=number, Date Opened=date, AddressKey=text, TrashHaulerKey=text, CurrentPolicy=number]}}),
+				    #"Added Alt1 Fine" = Table.TransformColumns(
+				        #"Grouped Rows1",
+				        {
+				            "AllData",
+				            (t as table) =>
+				                let
+				                    UniqueDates =
+				                        List.Buffer(
+				                            List.Distinct(
+				                                List.Transform(t[Date Opened], Date.From)
+				                            )
+				                        )
+				                in
+				                    Table.AddColumn(
+				                        t,
+				                        "Alt1Policy",
+				                        (r as record) =>
+				                            let
+				                                CurrentDate = Date.From(r[Date Opened]),
+				
+				                                DatesInWindow =
+				                                    List.Select(
+				                                        UniqueDates,
+				                                        (d as date) =>
+				                                            d >= Date.AddDays(CurrentDate, -180)
+				                                            and d <= CurrentDate
+				                                    )
+				                            in
+				                                if List.Count(DatesInWindow) >= 3
+				                                then 1500
+				                                else 0,
+				                        Currency.Type
+				                    )
+				        }
+				    ),
+				    #"Added Alt2 Fine" =
+				    Table.TransformColumns(
+				        #"Added Alt1 Fine",
+				        {
+				            "AllData",
+				            (t) =>
+				                let
+				                    Dates = List.Transform(t[Date Opened], Date.From),
+				
+				                    Result =
+				                        List.Accumulate(
+				                            Dates,
+				                            [LastFine = null, Fines = {}],
+				                            (s, CurrentDate) =>
+				                                let
+				                                    Count =
+				                                        List.Count(
+				                                            List.Select(
+				                                                Dates,
+				                                                (d) =>
+				                                                    d <= CurrentDate
+				                                                    and d >= Date.AddDays(CurrentDate, -180)
+				                                                    and (
+				                                                        if s[LastFine] = null
+				                                                        then true
+				                                                        else d > s[LastFine]
+				                                                    )
+				                                            )
+				                                        ),
+				
+				                                    Fine = if Count >= 3 then 1500 else 0
+				                                in
+				                                    [
+				                                        LastFine =
+				                                            if Fine = 1500
+				                                            then CurrentDate
+				                                            else s[LastFine],
+				
+				                                        Fines = s[Fines] & {Fine}
+				                                    ]
+				                        )
+				                in
+				                    Table.FromColumns(
+				                        Table.ToColumns(t) & {Result[Fines]},
+				                        Table.ColumnNames(t) & {"Alt2Policy"}
+				                    )
+				        }
+				    ),
+				    #"Expanded AllData" = Table.ExpandTableColumn(#"Added Alt2 Fine", "AllData", {"Request Number", "Date Opened", "AddressKey", "TrashHaulerKey", "CurrentPolicy", "Alt1Policy", "Alt2Policy"}, {"Request Number", "Date Opened", "AddressKey.1", "TrashHaulerKey", "CurrentPolicy", "Alt1Policy", "Alt2Policy"}),
+				    #"Reordered Columns1" = Table.ReorderColumns(#"Expanded AllData",{"Request Number", "Date Opened", "AddressKey", "AddressKey.1", "TrashHaulerKey", "CurrentPolicy", "Alt1Policy", "Alt2Policy"}),
+				    #"Removed Columns5" = Table.RemoveColumns(#"Reordered Columns1",{"AddressKey.1", "Request Number"})
+				in
+				    #"Removed Columns5"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

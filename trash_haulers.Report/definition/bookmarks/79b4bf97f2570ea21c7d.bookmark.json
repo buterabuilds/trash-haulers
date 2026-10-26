@@ -1,0 +1,793 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Map Reset",
+  "name": "79b4bf97f2570ea21c7d",
+  "options": {
+    "targetVisualNames": [
+      "70c8fb7bce28c8d46625"
+    ],
+    "preserveNewVisualVisibility": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "b582989a43b83bc14a99",
+    "sections": {
+      "b582989a43b83bc14a99": {
+        "filters": {
+          "byExpr": [
+            {
+              "name": "3662a17acacc6e170fd5",
+              "type": "Categorical",
+              "expression": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DIM_TrashRoute"
+                    }
+                  },
+                  "Property": "Trash Route"
+                }
+              },
+              "howCreated": 5
+            }
+          ]
+        },
+        "visualContainers": {
+          "63d327772f6b3003a222": {
+            "singleVisual": {
+              "visualType": "shape",
+              "objects": {}
+            }
+          },
+          "70c8fb7bce28c8d46625": {
+            "filters": {
+              "byName": {
+                "692e03c027a413a1a277": {
+                  "name": "692e03c027a413a1a277",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "f",
+                        "Entity": "FACT_ServiceRequests",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "f"
+                                    }
+                                  },
+                                  "Property": "MissedFlag"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'Y'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FACT_ServiceRequests"
+                        }
+                      },
+                      "Property": "MissedFlag"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              }
+            },
+            "singleVisual": {
+              "visualType": "advancedSlicerVisual",
+              "objects": {
+                "merge": {
+                  "general": [
+                    {
+                      "properties": {
+                        "filter": {
+                          "filter": {
+                            "Version": 2,
+                            "From": [
+                              {
+                                "Name": "f",
+                                "Entity": "FACT_ServiceRequests",
+                                "Type": 0
+                              }
+                            ],
+                            "Where": [
+                              {
+                                "Condition": {
+                                  "In": {
+                                    "Expressions": [
+                                      {
+                                        "Column": {
+                                          "Expression": {
+                                            "SourceRef": {
+                                              "Source": "f"
+                                            }
+                                          },
+                                          "Property": "MissedFlag"
+                                        }
+                                      }
+                                    ],
+                                    "Values": [
+                                      [
+                                        {
+                                          "Literal": {
+                                            "Value": "'Y'"
+                                          }
+                                        }
+                                      ]
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "9220e303c4983437b77a": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "5dca92d7b82123b2a383",
+                  "type": "Advanced",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DIM_TrashRoute",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "Not": {
+                            "Expression": {
+                              "Comparison": {
+                                "ComparisonKind": 0,
+                                "Left": {
+                                  "Column": {
+                                    "Expression": {
+                                      "SourceRef": {
+                                        "Source": "d"
+                                      }
+                                    },
+                                    "Property": "Trash Route"
+                                  }
+                                },
+                                "Right": {
+                                  "Literal": {
+                                    "Value": "null"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DIM_TrashRoute"
+                        }
+                      },
+                      "Property": "Trash Route"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "3a19a81b01b75af4e83a",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DIM_TrashRoute"
+                        }
+                      },
+                      "Property": "Trash Hauler"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "c4e7460acc5810a8e02d",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_MeasureTable"
+                        }
+                      },
+                      "Property": "Total Addresses"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "1bccf465c9ff785d0709",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_MeasureTable"
+                        }
+                      },
+                      "Property": "Total Dates"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "tableEx",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_MeasureTable"
+                        }
+                      },
+                      "Property": "Total Requests"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "663e37e218bbdeb159d5": {
+            "singleVisual": {
+              "visualType": "image",
+              "objects": {}
+            }
+          },
+          "771ee0a735cae4fc06f2": {
+            "singleVisual": {
+              "visualType": "shape",
+              "objects": {}
+            }
+          },
+          "81979d6753dfca62fa12": {
+            "singleVisual": {
+              "visualType": "shape",
+              "objects": {}
+            }
+          },
+          "c6525ac04df251765394": {
+            "singleVisual": {
+              "visualType": "textbox",
+              "objects": {}
+            }
+          },
+          "c9b50eeb749dcfd421fe": {
+            "filters": {
+              "byName": {
+                "88e6ae3b94dac0e8b65b": {
+                  "name": "88e6ae3b94dac0e8b65b",
+                  "type": "Advanced",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "_",
+                        "Entity": "_MeasureTable",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "Comparison": {
+                            "ComparisonKind": 1,
+                            "Left": {
+                              "Measure": {
+                                "Expression": {
+                                  "SourceRef": {
+                                    "Source": "_"
+                                  }
+                                },
+                                "Property": "Total Requests"
+                              }
+                            },
+                            "Right": {
+                              "Literal": {
+                                "Value": "100L"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_MeasureTable"
+                        }
+                      },
+                      "Property": "Total Requests"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              }
+            },
+            "singleVisual": {
+              "visualType": "clusteredBarChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_MeasureTable"
+                        }
+                      },
+                      "Property": "Total Requests"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DIM_Location"
+                        }
+                      },
+                      "Property": "Zip Code"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "d3a1ab9f052de57b0412": {
+            "filters": {
+              "byName": {
+                "2e1d323095f1a75c916b": {
+                  "name": "2e1d323095f1a75c916b",
+                  "type": "Exclude",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DIM_Location",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "Not": {
+                            "Expression": {
+                              "In": {
+                                "Expressions": [
+                                  {
+                                    "Column": {
+                                      "Expression": {
+                                        "SourceRef": {
+                                          "Source": "d"
+                                        }
+                                      },
+                                      "Property": "Latitude"
+                                    }
+                                  },
+                                  {
+                                    "Column": {
+                                      "Expression": {
+                                        "SourceRef": {
+                                          "Source": "d"
+                                        }
+                                      },
+                                      "Property": "Longitude"
+                                    }
+                                  },
+                                  {
+                                    "Column": {
+                                      "Expression": {
+                                        "SourceRef": {
+                                          "Source": "d"
+                                        }
+                                      },
+                                      "Property": "Latitude"
+                                    }
+                                  },
+                                  {
+                                    "Column": {
+                                      "Expression": {
+                                        "SourceRef": {
+                                          "Source": "d"
+                                        }
+                                      },
+                                      "Property": "Longitude"
+                                    }
+                                  }
+                                ],
+                                "Values": [
+                                  [
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032310817119708218D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00080005895852272254D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032310817119708218D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00080005895852272254D"
+                                      }
+                                    }
+                                  ],
+                                  [
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032288274897359633D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00080050802536375278D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032288274897359633D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00080050802536375278D"
+                                      }
+                                    }
+                                  ],
+                                  [
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032192265653416697D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.000799189720574332D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032192265653416697D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.000799189720574332D"
+                                      }
+                                    }
+                                  ],
+                                  [
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032197702739095873D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.000799160341129184D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032197702739095873D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.000799160341129184D"
+                                      }
+                                    }
+                                  ],
+                                  [
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032198346995177527D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00079936730986013738D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032198346995177527D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00079936730986013738D"
+                                      }
+                                    }
+                                  ],
+                                  [
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032207345893543922D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00079890164557439079D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032207345893543922D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00079890164557439079D"
+                                      }
+                                    }
+                                  ],
+                                  [
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032211621982149727D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00079838523711625662D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032211621982149727D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00079838523711625662D"
+                                      }
+                                    }
+                                  ],
+                                  [
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032221571807191881D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00079926787888896344D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032221571807191881D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00079926787888896344D"
+                                      }
+                                    }
+                                  ],
+                                  [
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032258423259288934D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00080004280635566154D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032258423259288934D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00080004280635566154D"
+                                      }
+                                    }
+                                  ],
+                                  [
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032276446864701666D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00079975523804352551D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "0.00032276446864701666D"
+                                      }
+                                    },
+                                    {
+                                      "Literal": {
+                                        "Value": "-0.00079975523804352551D"
+                                      }
+                                    }
+                                  ]
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "howCreated": 4
+                }
+              },
+              "byExpr": [
+                {
+                  "name": "69aada08945c163a01c1",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DIM_TrashRoute"
+                        }
+                      },
+                      "Property": "Trash Hauler"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "88aa2fbf249568da9100",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_MeasureTable"
+                        }
+                      },
+                      "Property": "Total Requests"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "a5e7de0de2875e7316e7",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DIM_Location"
+                        }
+                      },
+                      "Property": "Longitude"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "d1c98c4645619eec2c85",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DIM_Location"
+                        }
+                      },
+                      "Property": "Latitude"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "azureMap",
+              "objects": {}
+            }
+          },
+          "d86b542baa3aee281aab": {
+            "singleVisual": {
+              "visualType": "pageNavigator",
+              "objects": {}
+            }
+          },
+          "ec113f6c09daea9ea706": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          },
+          "eb5ed37d856044ba5356": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          }
+        }
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

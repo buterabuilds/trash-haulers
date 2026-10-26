@@ -1,0 +1,58 @@
+table PAR_Policy
+	lineageTag: 64635c6a-1dde-44cf-b3fd-4575a64cb82d
+
+	column PolicyID
+		formatString: 0
+		lineageTag: 4e210d37-5a1c-4d08-bab7-aa75d7266ec9
+		summarizeBy: count
+		isNameInferred
+		sourceColumn: [PolicyID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column PolicyName
+		lineageTag: cc5f5e8e-1f0e-4eb3-96e3-c14456fe87a4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [PolicyName]
+		sortByColumn: PolicyID
+
+		annotation SummarizationSetBy = Automatic
+
+	column FineAmount
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 3eeafc8f-79ee-4e44-bb65-0d95e8cac614
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [FineAmount]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column RuleDescription
+		lineageTag: a22adbe9-7e64-4106-8401-93136b1c4ca2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [RuleDescription]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition PAR_Policy = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "PolicyID", INTEGER,
+				    "PolicyName", STRING,
+				    "FineAmount", CURRENCY,
+				    "RuleDescription", STRING,
+				    {
+				        {1, "Current Policy", 200, "Each subsequent missed pickup after the first is a $200 fine."},
+				        {2, "Alternative Method 1", 1500, "$1,500 fine per 3 unique missed dates in 180 days (Rolling window)."},
+				        {3, "Alternative Method 2", 1500, "$1,500 fine per 3 unique missed dates in 180 days (Dates can support one fine)."}
+				    }
+				)
+
+	annotation PBI_Id = b1c6676e086349fe84a2f2823e32b417
+

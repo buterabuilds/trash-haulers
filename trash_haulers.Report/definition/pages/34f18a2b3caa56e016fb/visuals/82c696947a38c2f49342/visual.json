@@ -1,0 +1,173 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "82c696947a38c2f49342",
+  "position": {
+    "x": 103.06451612903226,
+    "y": 722.90322580645159,
+    "z": 12000,
+    "height": 56.612903225806456,
+    "width": 150.96774193548387,
+    "tabOrder": 12000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Year End Total",
+                    "textStyle": {
+                      "fontFamily": "DIN",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": {
+                      "propertyIdentifier": {
+                        "objectName": "values",
+                        "propertyName": "expr"
+                      },
+                      "selector": {
+                        "id": "TotalFines (Metro)"
+                      }
+                    },
+                    "textStyle": {
+                      "fontFamily": "DIN",
+                      "fontSize": "18pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "expr": {
+              "propertyDefinitionKind": "ExprContext",
+              "value": {
+                "expr": {
+                  "Min": {
+                    "Expression": {
+                      "Column": {
+                        "Expression": {
+                          "Subquery": {
+                            "Query": {
+                              "Version": 2,
+                              "From": [
+                                {
+                                  "Name": "_",
+                                  "Entity": "_MeasureTable",
+                                  "Type": 0
+                                }
+                              ],
+                              "Select": [
+                                {
+                                  "Measure": {
+                                    "Expression": {
+                                      "SourceRef": {
+                                        "Source": "_"
+                                      }
+                                    },
+                                    "Property": "Total Fines"
+                                  },
+                                  "Name": "Total Fines"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "Property": "Total Fines"
+                      }
+                    },
+                    "IncludeAllTypes": 1
+                  },
+                  "Annotations": {
+                    "NaturalLanguage": {
+                      "version": 1,
+                      "kind": "NaturalLanguage",
+                      "annotation": {
+                        "name": "TotalFines (Metro)"
+                      }
+                    }
+                  }
+                }
+              },
+              "context": {
+                "filterContext": [
+                  {
+                    "filter": {
+                      "Version": 2,
+                      "From": [
+                        {
+                          "Name": "_",
+                          "Entity": "_MeasureTable",
+                          "Type": 0
+                        },
+                        {
+                          "Name": "d",
+                          "Entity": "DIM_TrashRoute",
+                          "Type": 0
+                        }
+                      ],
+                      "Where": [
+                        {
+                          "Condition": {
+                            "In": {
+                              "Expressions": [
+                                {
+                                  "Column": {
+                                    "Expression": {
+                                      "SourceRef": {
+                                        "Source": "d"
+                                      }
+                                    },
+                                    "Property": "Trash Hauler"
+                                  }
+                                }
+                              ],
+                              "Values": [
+                                [
+                                  {
+                                    "Literal": {
+                                      "Value": "'METRO'"
+                                    }
+                                  }
+                                ]
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            "formatString": {
+              "expr": {
+                "Literal": {
+                  "Value": "'\\$#,0;(\\$#,0);\\$#,0'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "TotalFines (Metro)"
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,37 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup BRONZE
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup SILVER
+
+	annotation PBI_QueryGroupOrder = 1
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["trash_hauler_report (2)","FACT_ServiceRequests","DIM_TrashRoute","DIM_Location","FACT_PenaltyEvents"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table 'trash_hauler_report (2)'
+ref table DateTableTemplate_aff6be03-aa55-43bf-a1ac-9089c23ec0e9
+ref table LocalDateTable_b4417b25-083f-44f7-a296-fee3adf48132
+ref table FACT_ServiceRequests
+ref table DIM_TrashRoute
+ref table DIM_Location
+ref table DIM_Date
+ref table _MeasureTable
+ref table PAR_Policy
+ref table FACT_PenaltyEvents
+
+ref cultureInfo en-US
+

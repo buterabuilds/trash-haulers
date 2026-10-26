@@ -1,0 +1,157 @@
+table 'trash_hauler_report (2)'
+	isHidden
+	lineageTag: 8c5d4ff8-8508-49a0-bd1b-d89274f5a15c
+
+	column 'Request Number'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: ff8f9775-0ba0-43df-b1fa-46ffe5f50532
+		summarizeBy: sum
+		sourceColumn: Request Number
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date Opened'
+		dataType: dateTime
+		isHidden
+		formatString: Long Date
+		lineageTag: 6af9870c-b7eb-4366-98dd-8f4f1d9b090f
+		summarizeBy: none
+		sourceColumn: Date Opened
+
+		variation Variation
+			isDefault
+			relationship: 2c4a664e-7273-41b3-bf3c-a978e0edda80
+			defaultHierarchy: LocalDateTable_b4417b25-083f-44f7-a296-fee3adf48132.'Date Hierarchy'
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Request '
+		dataType: string
+		isHidden
+		lineageTag: fb7a54c8-48a6-44f0-8a08-f83777523fe0
+		summarizeBy: none
+		sourceColumn: "Request "
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		isHidden
+		lineageTag: 5a3b8991-82e8-4adc-ab9b-f989dc26777c
+		summarizeBy: none
+		sourceColumn: Description
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Incident Address'
+		dataType: string
+		isHidden
+		lineageTag: b8fe2855-c666-4c66-b85f-6e321f357adc
+		summarizeBy: none
+		sourceColumn: Incident Address
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Zip Code'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 93036b3f-7040-487c-83cb-6dee02140b1c
+		summarizeBy: count
+		sourceColumn: Zip Code
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Trash Hauler'
+		dataType: string
+		isHidden
+		lineageTag: 21551179-03d0-4b8d-af0c-fa0ded0cb1f1
+		summarizeBy: none
+		sourceColumn: Trash Hauler
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Trash Route'
+		dataType: string
+		isHidden
+		lineageTag: 7af34d22-76d6-48b6-a862-1a7a8a1885e6
+		summarizeBy: none
+		sourceColumn: Trash Route
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Council District'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: baf04c20-d8f0-41b4-8a81-3538a40de1c9
+		summarizeBy: sum
+		sourceColumn: Council District
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'State Plan X'
+		dataType: double
+		isHidden
+		lineageTag: c97076f0-69a7-4eba-9aed-3c74c89260b3
+		summarizeBy: sum
+		sourceColumn: State Plan X
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'State Plan Y'
+		dataType: double
+		isHidden
+		lineageTag: b9ec779a-448c-4638-816f-209c5881db66
+		summarizeBy: sum
+		sourceColumn: State Plan Y
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'trash_hauler_report (2)' = m
+		mode: import
+		queryGroup: BRONZE
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Matthew\Downloads\trash_hauler_report.csv"),[Delimiter=",", Columns=11, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Request Number", Int64.Type}, {"Date Opened", type date}, {"Request ", type text}, {"Description", type text}, {"Incident Address", type text}, {"Zip Code", Int64.Type}, {"Trash Hauler", type text}, {"Trash Route", type text}, {"Council District", Int64.Type}, {"State Plan X", type number}, {"State Plan Y", type number}})
+				in
+				    #"Changed Type"
+
+	changedProperty = IsHidden
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

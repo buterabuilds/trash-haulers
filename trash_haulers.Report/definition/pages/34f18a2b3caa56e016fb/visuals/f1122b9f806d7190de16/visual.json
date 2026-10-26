@@ -1,0 +1,173 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "f1122b9f806d7190de16",
+  "position": {
+    "x": 886.9354838709678,
+    "y": 722.90322580645159,
+    "z": 14000,
+    "height": 56.612903225806456,
+    "width": 121.93548387096774,
+    "tabOrder": 14000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Year End Total",
+                    "textStyle": {
+                      "fontFamily": "DIN",
+                      "fontSize": "12pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": {
+                      "propertyIdentifier": {
+                        "objectName": "values",
+                        "propertyName": "expr"
+                      },
+                      "selector": {
+                        "id": "TotalFines (WasteInd)"
+                      }
+                    },
+                    "textStyle": {
+                      "fontFamily": "DIN",
+                      "fontSize": "18pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "expr": {
+              "propertyDefinitionKind": "ExprContext",
+              "value": {
+                "expr": {
+                  "Min": {
+                    "Expression": {
+                      "Column": {
+                        "Expression": {
+                          "Subquery": {
+                            "Query": {
+                              "Version": 2,
+                              "From": [
+                                {
+                                  "Name": "_",
+                                  "Entity": "_MeasureTable",
+                                  "Type": 0
+                                }
+                              ],
+                              "Select": [
+                                {
+                                  "Measure": {
+                                    "Expression": {
+                                      "SourceRef": {
+                                        "Source": "_"
+                                      }
+                                    },
+                                    "Property": "Total Fines"
+                                  },
+                                  "Name": "Total Fines"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "Property": "Total Fines"
+                      }
+                    },
+                    "IncludeAllTypes": 1
+                  },
+                  "Annotations": {
+                    "NaturalLanguage": {
+                      "version": 1,
+                      "kind": "NaturalLanguage",
+                      "annotation": {
+                        "name": "TotalFines (WasteInd)"
+                      }
+                    }
+                  }
+                }
+              },
+              "context": {
+                "filterContext": [
+                  {
+                    "filter": {
+                      "Version": 2,
+                      "From": [
+                        {
+                          "Name": "_",
+                          "Entity": "_MeasureTable",
+                          "Type": 0
+                        },
+                        {
+                          "Name": "d",
+                          "Entity": "DIM_TrashRoute",
+                          "Type": 0
+                        }
+                      ],
+                      "Where": [
+                        {
+                          "Condition": {
+                            "In": {
+                              "Expressions": [
+                                {
+                                  "Column": {
+                                    "Expression": {
+                                      "SourceRef": {
+                                        "Source": "d"
+                                      }
+                                    },
+                                    "Property": "Trash Hauler"
+                                  }
+                                }
+                              ],
+                              "Values": [
+                                [
+                                  {
+                                    "Literal": {
+                                      "Value": "'WASTE IND'"
+                                    }
+                                  }
+                                ]
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            "formatString": {
+              "expr": {
+                "Literal": {
+                  "Value": "'\\$#,0;(\\$#,0);\\$#,0'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "TotalFines (WasteInd)"
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

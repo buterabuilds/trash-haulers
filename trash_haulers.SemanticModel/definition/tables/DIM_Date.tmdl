@@ -1,0 +1,145 @@
+table DIM_Date
+	lineageTag: 907c2c55-db2d-4ad0-be07-32966da5c7c1
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: Short Date
+		lineageTag: 94571601-eb2e-48fe-9dce-f02b35595137
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 1d6e7ab1-f9d4-4de4-8581-80924a3b3e5e
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month No'
+		formatString: 0
+		lineageTag: cbee41f5-8905-4401-a83e-14ebf14e39c3
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Month No]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		lineageTag: 48d39108-f427-43b9-b180-661f583f26b9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+		sortByColumn: 'Month No'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: 9c18cd75-9b18-43c0-bae3-8da0d3ff9db9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weekday
+		lineageTag: 9f95b78f-9246-4c8f-a3fe-c08438b92e21
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Weekday]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week No'
+		formatString: 0
+		lineageTag: 4443b284-bb0b-43d6-a63f-3457cb226f76
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Week No]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ISO Week No'
+		formatString: 0
+		lineageTag: 87380dab-1fd0-43af-926a-e59e10b8e6e5
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [ISO Week No]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year-Week
+		lineageTag: 1514ec30-d21d-4b6a-a7c7-ba5222f9be57
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year-Week]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week Starting'
+		formatString: Short Date
+		lineageTag: 1505bafd-f252-4dcc-8f3d-f601b7adc565
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Week Starting]
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearCategory =
+			
+			VAR MaxYear = MAXX('DIM_Date', 'DIM_Date'[Year])
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    'DIM_Date'[Year] = MaxYear, "Current Year",
+			    'DIM_Date'[Year] = MaxYear - 1, "Last Year",
+			    "Older Years"
+			)
+		lineageTag: 49daa722-f669-4123-88bb-2bca1adb65ff
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Date Hierarchy'
+		lineageTag: d9719348-8a4d-4a2f-8d27-bdc18b851368
+
+		level Year
+			lineageTag: 9ae06659-101e-4afc-8e11-4c83feafa52f
+			column: Year
+
+		level 'Month No'
+			lineageTag: 78ce8058-ee66-4ada-bed6-6c56ba86e05a
+			column: 'Month No'
+
+		level Quarter
+			lineageTag: 55552909-e8a6-41b8-953d-2e61202714ba
+			column: Quarter
+
+		level Weekday
+			lineageTag: 9c5f0ca9-40c8-49ca-8fab-c387cbc154b7
+			column: Weekday
+
+	partition DIM_Date = calculated
+		mode: import
+		source =
+				ADDCOLUMNS(
+				    CALENDARAUTO(),
+				    "Year", YEAR([Date]),
+				    "Month No", MONTH([Date]),
+				    "Month Name", FORMAT([Date], "MMM"),
+				    "Quarter", "Q" & FORMAT([Date], "Q"),
+				    "Weekday", FORMAT([Date], "ddd"),
+				
+				    "Week No", WEEKNUM([Date], 2),
+				    "ISO Week No", WEEKNUM([Date], 12),
+				    "Year-Week", FORMAT([Date], "YYYY") & "-W" & FORMAT(WEEKNUM([Date], 21), "00"),
+				    "Week Starting", [Date] - WEEKDAY([Date], 2) + 1
+				)
+
+	annotation PBI_Id = 9d9b4e64a846428abad73a10a8a5a1a4
+

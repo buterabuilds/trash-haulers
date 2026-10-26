@@ -1,0 +1,192 @@
+table DIM_Location
+	lineageTag: aff1753e-4bcd-4ba3-8fd9-d9e3603a3cb2
+
+	column AddressKey
+		dataType: string
+		lineageTag: ffb1d677-4b50-436d-9b6e-9fed69f8df02
+		summarizeBy: none
+		sourceColumn: AddressKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Incident Address'
+		dataType: string
+		lineageTag: 890f095e-6009-4b37-8d75-7d10c9f6cef3
+		summarizeBy: none
+		sourceColumn: Incident Address
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Zip Code'
+		dataType: string
+		lineageTag: d15860cb-7ecf-4379-962c-910860094dc7
+		summarizeBy: none
+		sourceColumn: Zip Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Council District'
+		dataType: int64
+		formatString: 0
+		lineageTag: fa9cd87d-1d87-40c7-81c3-cda7402dfab3
+		summarizeBy: sum
+		sourceColumn: Council District
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'State Plan X'
+		dataType: double
+		lineageTag: b45b412a-97fd-4cbd-8bcc-71f6ac45e06b
+		summarizeBy: sum
+		sourceColumn: State Plan X
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'State Plan Y'
+		dataType: double
+		lineageTag: 3d8e67a3-9b3c-418b-bc04-4335474cdc7c
+		summarizeBy: sum
+		sourceColumn: State Plan Y
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Name
+		dataType: string
+		lineageTag: 7e2f8498-3354-4e17-a977-690a7f13759b
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: cc965dbb-8dbc-4ef4-8e56-224862aa80c0
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Longitude
+		dataType: double
+		lineageTag: 4e223036-76be-4767-b6b3-becea651a9ae
+		summarizeBy: sum
+		sourceColumn: Longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Latitude
+		dataType: double
+		lineageTag: 59e1e442-ab5f-4771-9554-da07087da5b6
+		summarizeBy: sum
+		sourceColumn: Latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition DIM_Location = m
+		mode: import
+		queryGroup: SILVER
+		source = ```
+				let
+				    Source = #"trash_hauler_report (2)",
+				    #"Uppercased Text" = Table.TransformColumns(Source,{{"Incident Address", Text.Upper, type text}}),
+				    #"Split Column by Delimiter" = Table.SplitColumn(#"Uppercased Text", "Incident Address", Splitter.SplitTextByEachDelimiter({","}, QuoteStyle.None, false), {"Incident Address.1", "Incident Address.2"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"Incident Address.1", type text}, {"Incident Address.2", type text}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type1",", "," ",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value",","," ",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","TENNESSEE","TN",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Extract City" = Table.TransformColumns(
+				    #"Replaced Value2", 
+				    {
+				        {
+				            "Incident Address.2", 
+				            each if _ <> null and Text.Contains(_, "TN") 
+				                 then Text.BeforeDelimiter(_, "TN") 
+				                 else null, 
+				            type text
+				        }
+				    }
+				),
+				    #"Trimmed Text" = Table.TransformColumns(#"Extract City",{{"Incident Address.2", Text.Trim, type text}}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Trimmed Text","NASHVILLE ","",Replacer.ReplaceText,{"Incident Address.2"}),
+				    #"Replacing Nulls" = Table.ReplaceValue(
+				        #"Replaced Value3",
+				        null,
+				        each if [Incident Address.2] = null then
+				            if [Zip Code] = 37013 then "ANTIOCH"
+				            else if [Zip Code] = 37027 then "BRENTWOOD"
+				            else if [Zip Code] = 37189 then "WHITES CREEK"
+				            else if [Zip Code] = 37076 then "HERMITAGE"
+				            else if [Zip Code] = 37086 then "LA VERGNE"
+				            else if [Zip Code] = 37115 then "MADISON"
+				            else if List.Contains({
+				                37201, 37203, 37204, 37205, 37206, 37207, 37208, 37209, 37210, 
+				                37211, 37212, 37213, 37214, 37215, 37216, 37217, 37218, 37219, 37220, 37221
+				                }, [Zip Code]) then "NASHVILLE"
+				            else null
+				        else [Incident Address.2],
+				    Replacer.ReplaceValue,
+				    {"Incident Address.2"}
+				    ),
+				    #"Renamed Columns" = Table.RenameColumns(#"Replacing Nulls",{{"Incident Address.2", "City"}}),
+				    #"Split Column by Delimiter1" = Table.SplitColumn(#"Renamed Columns", "Incident Address.1", Splitter.SplitTextByEachDelimiter({" "}, QuoteStyle.None, true), {"Incident Address.1.1", "Incident Address.1.2"}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Split Column by Delimiter1",{{"Incident Address.1.1", type text}, {"Incident Address.1.2", type text}}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Changed Type2","PK","PIKE",Replacer.ReplaceValue,{"Incident Address.1.2"}),
+				    #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5","PKE","PIKE",Replacer.ReplaceValue,{"Incident Address.1.2"}),
+				    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6",".","",Replacer.ReplaceText,{"Incident Address.1.2"}),
+				    #"Replaced Value8" = Table.ReplaceValue(#"Replaced Value7","#","",Replacer.ReplaceText,{"Incident Address.1.2"}),
+				    #"Removing Numeric" = Table.TransformColumns(
+				        #"Replaced Value8",
+				        {
+				            {
+				                "Incident Address.1.2",
+				                each if Text.Length(Text.Select(_, {"0","1","2","3","4","5","6","7","8","9"})) > 0
+				                    then null
+				                    else _,
+				                type text
+				            }
+				        }
+				    ),
+				    #"Replacing Unit/Direction" = Table.TransformColumns(
+				        #"Removing Numeric",
+				        {
+				            {
+				                "Incident Address.1.2",
+				                each if List.Contains({"A","B","C","D","N","S","E","W"}, _)
+				                    then null
+				                    else _,
+				                type text
+				            }
+				        }
+				    ),
+				    #"Replaced Value9" = Table.ReplaceValue(#"Replacing Unit/Direction","RRD","RD",Replacer.ReplaceValue,{"Incident Address.1.2"}),
+				    #"Replaced Value10" = Table.ReplaceValue(#"Replaced Value9"," NASHVILLE TN","",Replacer.ReplaceText,{"Incident Address.1.1"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value10"," DRIVE"," DR",Replacer.ReplaceText,{"Incident Address.1.1"}),
+				    #"Merged Columns" = Table.CombineColumns(#"Replaced Value4",{"Incident Address.1.1", "Incident Address.1.2"},Combiner.CombineTextByDelimiter(" ", QuoteStyle.None),"Incident Address"),
+				    #"Changed Type4" = Table.TransformColumnTypes(#"Merged Columns",{{"Incident Address", type text}}),
+				    #"Replaced Errors" = Table.ReplaceErrorValues(#"Changed Type4", {{"Incident Address", null}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Replaced Errors",{"Incident Address", "City", "Zip Code", "Council District", "State Plan X", "State Plan Y"}),
+				    #"Added Custom" = Table.AddColumn(#"Removed Other Columns", "AddressKey", each Text.Combine({[Incident Address], [City], Text.From([Zip Code])}, ",")),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom",{"AddressKey", "Incident Address", "City", "Zip Code", "Council District", "State Plan X", "State Plan Y"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Reordered Columns", {"AddressKey"}),
+				    #"Replaced Value11" = Table.ReplaceValue(#"Removed Duplicates",null,"UNKNOWN",Replacer.ReplaceValue,{"City"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Replaced Value11", each [AddressKey] <> null and [AddressKey] <> ""),
+				    #"Run Python script" = Python.Execute("import pandas as pd#(lf)from pyproj import Transformer#(lf)#(lf)transformer = Transformer.from_crs(#(lf)    ""EPSG:2274"",  # Tennessee State Plane, NAD83, US feet#(lf)    ""EPSG:4326"",  # Latitude/longitude#(lf)    always_xy=True#(lf))#(lf)#(lf)dataset[""Longitude""], dataset[""Latitude""] = transformer.transform(#(lf)    dataset[""State Plan X""],#(lf)    dataset[""State Plan Y""]#(lf))",[dataset=#"Filtered Rows"]),
+				    #"Expanded Value" = Table.ExpandTableColumn(#"Run Python script", "Value", {"AddressKey", "Incident Address", "City", "Zip Code", "Council District", "State Plan X", "State Plan Y", "Longitude", "Latitude"}, {"AddressKey", "Incident Address", "City", "Zip Code", "Council District", "State Plan X", "State Plan Y", "Longitude", "Latitude"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Value",{{"Council District", Int64.Type}, {"Longitude", type number}, {"Latitude", type number}, {"State Plan X", type number}, {"State Plan Y", type number}}),
+				    #"Replaced Value12" = Table.ReplaceValue(#"Changed Type",".0","",Replacer.ReplaceText,{"Zip Code"})
+				in
+				    #"Replaced Value12"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

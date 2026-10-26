@@ -1,0 +1,29 @@
+relationship 2c4a664e-7273-41b3-bf3c-a978e0edda80
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'trash_hauler_report (2)'.'Date Opened'
+	toColumn: LocalDateTable_b4417b25-083f-44f7-a296-fee3adf48132.Date
+
+relationship ae3a2d8c-f010-a6ca-bed8-be5b0fda71b9
+	fromColumn: FACT_ServiceRequests.AddressKey
+	toColumn: DIM_Location.AddressKey
+
+relationship f1fb8ff5-8d82-4ee0-4f9f-402d66223bc0
+	fromColumn: FACT_ServiceRequests.TrashHaulerKey
+	toColumn: DIM_TrashRoute.TrashHaulerKey
+
+relationship 40ddb3f3-a103-3fd6-1f10-cbaf73b1c6ff
+	fromColumn: FACT_ServiceRequests.'Date Opened'
+	toColumn: DIM_Date.Date
+
+relationship AutoDetected_9eeef119-bfee-449f-a763-4a0eb8e322c6
+	fromColumn: FACT_PenaltyEvents.AddressKey
+	toColumn: DIM_Location.AddressKey
+
+relationship AutoDetected_16a5f031-0e65-45dd-a233-dbf8ba86d853
+	fromColumn: FACT_PenaltyEvents.TrashHaulerKey
+	toColumn: DIM_TrashRoute.TrashHaulerKey
+
+relationship c69f94d7-61f7-b4c5-2791-51e182259a85
+	fromColumn: FACT_PenaltyEvents.'Date Opened'
+	toColumn: DIM_Date.Date
+

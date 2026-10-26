@@ -1,0 +1,17 @@
+# Power BI local state and cached data
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+**/.pbi/unappliedChanges.json
+
+# Packaged Power BI and archive files
+*.pbix
+*.pbit
+*.zip
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary Microsoft Office files
+~$*

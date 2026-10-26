@@ -1,0 +1,59 @@
+table DIM_TrashRoute
+	lineageTag: d875a805-07a3-4348-a977-4eba96621293
+
+	column TrashHaulerKey
+		dataType: string
+		lineageTag: ade74a46-9c66-4588-9ecb-b3df0bf605bb
+		summarizeBy: none
+		sourceColumn: TrashHaulerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Trash Hauler'
+		dataType: string
+		lineageTag: 6ca0e097-8f90-4eb8-9e6f-e624b95ae6be
+		summarizeBy: none
+		sourceColumn: Trash Hauler
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Trash Route'
+		dataType: string
+		lineageTag: 2c61736a-157c-4052-bf06-3b0426c421ae
+		summarizeBy: none
+		sourceColumn: Trash Route
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DIM_TrashRoute = m
+		mode: import
+		queryGroup: SILVER
+		source = ```
+				let
+				    Source = #"trash_hauler_report (2)",
+				    #"Replaced Value11" = Table.ReplaceValue(Source,"Metro","METRO",Replacer.ReplaceText,{"Trash Hauler"}),
+				    #"Replaced Value12" = Table.ReplaceValue(#"Replaced Value11","",null,Replacer.ReplaceValue,{"Trash Route"}),
+				    #"Replaced HaulerBlanks" = Table.ReplaceValue(
+				        #"Replaced Value12", 
+				        each [Trash Hauler], 
+				        each
+				            if [Trash Hauler] = null or Text.Trim([Trash Hauler]) = "" then "UNKNOWN"
+				            else [Trash Hauler],
+				        Replacer.ReplaceValue,
+				        {"Trash Hauler"}
+				    ),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Replaced HaulerBlanks",{"Trash Hauler", "Trash Route"}),
+				    #"Added Custom" = Table.AddColumn(
+				        #"Removed Other Columns", 
+				        "TrashHaulerKey", 
+				        each [Trash Hauler] & ":" & Text.From([Trash Route] ?? "")),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom",{"TrashHaulerKey", "Trash Hauler", "Trash Route"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Reordered Columns", {"TrashHaulerKey"})
+				in
+				    #"Removed Duplicates"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
