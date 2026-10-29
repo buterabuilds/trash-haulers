@@ -35,7 +35,6 @@ The Power BI dashboard compares trash haulers and collection routes, identifies 
 - Python
 - pandas
 - pyproj
-- Git and GitHub
 
 ## Techniques and Methodology Used
 
